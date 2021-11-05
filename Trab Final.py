@@ -7,17 +7,17 @@ from funcao2 import *
 
 def main():
     planilhaPlayer = pd.read_csv("players.csv", delimiter = ",") #Le a planilha
-    planilhaRating = pd.read_csv("minirating.csv", delimiter = ",") #Le a planilha
-    TabelaHashJogador = [None] * 131071 
-    TabelaHashUsuario = [None] * 524287  
+    planilhaRating = pd.read_csv("rating.csv", delimiter = ",") #Le a planilha
+    TabelaHashJogador = [None] * 131071                     #Cria tabela hash para os Jogadores
+    TabelaHashUsuario = [None] * 524287                     #Cria tabela hash para os Usuarios
 
     inicioTimer = perf_counter()
-    carregar_players(TabelaHashJogador, planilhaPlayer)
+    carregar_players(TabelaHashJogador, planilhaPlayer)     #Carrega os Jogadores na tabela hash
     fimTimer = perf_counter()
     print(f"Tempo: {fimTimer - inicioTimer} segundos")
 
     inicioTimer = perf_counter()
-    carregar_rating(TabelaHashJogador, TabelaHashUsuario, planilhaRating)
+    carregar_rating(TabelaHashJogador, TabelaHashUsuario, planilhaRating)   #Carrega os Usuarios na tabela hash e as avaliações dos jogadores
     fimTimer = perf_counter()
     print(f"Tempo: {fimTimer - inicioTimer} segundos")
 
@@ -46,4 +46,3 @@ def main():
             print("Programa Encerrado!")
 
 main()
-
