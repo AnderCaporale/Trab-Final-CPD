@@ -3,6 +3,7 @@ from classes import *
 #Recebe uma lista, uma tabela hash e um id de usuario
 def pesquisaUser(ListaHashUsuario, TabelaHashJogador, idUser):
     j = 0
+    i = 0
     for i in range(len(ListaHashUsuario)):  #Procura o usuario caso haja colisoes e salva o indice no i
         if ListaHashUsuario[i] == idUser:
             break

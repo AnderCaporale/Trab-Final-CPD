@@ -25,4 +25,5 @@ class Avaliacao:
         self.notaJogador = notaJogador      #Salva a nota da avaliação
 
 def hash(id, tamanho):      #Função de Hash
-    return id % tamanho 
+    return id % tamanho
+
