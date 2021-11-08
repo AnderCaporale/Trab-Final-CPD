@@ -1,8 +1,12 @@
 from classes import *
 from classeTrie import *
-def carregar_players(TabelaHash, planilha):
+
+def carregar_players(TabelaHashJogador, TabelaHashPosicoes, planilha):
     for i in range(0, len(planilha.index)): #Le a planilha de jogadores linha a linha
-        insere_tabela_jogador(TabelaHash, planilha['sofifa_id'][i], planilha['name'][i], planilha['player_positions'][i], 131071)
+        nomeJogador = planilha['name'][i]
+        idJogador = planilha['sofifa_id'][i]
+        posicoes = planilha['player_positions'][i].split(', ')
+        insere_tabela_jogador(TabelaHashJogador, idJogador, nomeJogador, posicoes, 131071)
 
 
 def insere_tabela_jogador(tabela, id, nome, positions, tamanho):
@@ -20,7 +24,7 @@ def carregar_rating(TabelaHashJogador, TabelaHashUsuario, planilha):
         rating = planilha['rating'][i]          #Le a nota dada
         idJogador = planilha['sofifa_id'][i]    #Le o ID do Jogador
         insere_rating(TabelaHashJogador, idJogador, rating, 131071)
-        insere_tabela_usuario(TabelaHashUsuario, planilha['user_id'][i], idJogador, rating, 524287)
+        #insere_tabela_usuario(TabelaHashUsuario, planilha['user_id'][i], idJogador, rating, 524287)
 
 
 def insere_rating(TabelaHash, id, rating, tamanho):
@@ -133,3 +137,40 @@ def carregar_nomes(raiz:Trie,planilha):
     for i in range(0, len(planilha.index)):#Le a planilha de rating linha a linha
         nome = planilha['name'][i]
         raiz.insere_nodo(nome,i)
+
+def carregar_posicoes(TabelaHashJogador, TabelaHashPosicoes, planilha):
+    for i in range(0, len(planilha.index)): #Le a planilha de jogadores linha a linha
+        idJogador = planilha['sofifa_id'][i]
+        posicoes = planilha['player_positions'][i].split(', ')
+        insere_tabela_posicoes(TabelaHashPosicoes, TabelaHashJogador, posicoes, idJogador)
+
+
+def insere_tabela_posicoes(TabelaHashPosicoes, posicoes, idJogador):
+    for i in range(len(posicoes)):
+        novaPosicao = Posicao(posicoes[i])      #Cria uma nova posição
+        novaPosicao.ids.append(idJogador)
+
+        h = hash_palavras(posicoes[i], 7001)
+        if(TabelaHashPosicoes[h]):  #Se alguma posição ja foi inserida na tabela hash
+            for j in range(len(TabelaHashPosicoes[h])):     #Procura a posição na tabela hash
+                if TabelaHashPosicoes[h][j].nome == posicoes[i]:        #Achou posição correta
+                    if idJogador not in TabelaHashPosicoes[h][j].ids:   #Se ID Não está na lista de ids
+                        TabelaHashPosicoes[h][j].ids.append(idJogador)  #Adiciona o ID na lista
+                    
+        else:   #Se nenhuma posição foi inserida
+            TabelaHashPosicoes[h] = []                  #Cria a lista e insere a nova posição
+            TabelaHashPosicoes[h].append(novaPosicao)
+
+
+
+
+
+
+
+
+
+
+
+
+
+>>>>>>> 4780a06dc4638bf539d5823a5d70687239ab25b2

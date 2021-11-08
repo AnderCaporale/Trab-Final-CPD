@@ -6,27 +6,36 @@ from classes import *
 from funcao2 import *
 from classeTrie import *
 from funcao1 import *
+from funcao3 import *
 
 def main():
-
-    planilhaPlayer = pd.read_csv("players_clean2.csv", delimiter = ",") #Le a planilha
-    planilhaRating = pd.read_csv("rating.csv", delimiter = ",") #Le a planilha
+    planilhaPlayer = pd.read_csv("players.csv", delimiter = ",") #Le a planilha
+    planilhaRating = pd.read_csv("minirating.csv", delimiter = ",") #Le a planilha
     TabelaHashJogador = [None] * 131071                     #Cria tabela hash para os Jogadores
     TabelaHashUsuario = [None] * 524287                     #Cria tabela hash para os Usuarios
+    TabelaHashPosicoes = [None] * 7001                      #Cria tabela hash para as Posições
     raizTrie = Trie()
+
     inicioTimer = perf_counter()
-    carregar_players(TabelaHashJogador, planilhaPlayer)     #Carrega os Jogadores na tabela hash
+    carregar_players(TabelaHashJogador, TabelaHashPosicoes, planilhaPlayer)     #Carrega os Jogadores na tabela hash
     fimTimer = perf_counter()
-    print(f"Tempo: {fimTimer - inicioTimer} segundos")
+    print(f"Tempo carrega players: {fimTimer - inicioTimer} segundos")
+
     inicioTimer = perf_counter()
     carregar_rating(TabelaHashJogador, TabelaHashUsuario, planilhaRating)   #Carrega os Usuarios na tabela hash e as avaliações dos jogadores
     fimTimer = perf_counter()
+    print(f"Tempo carrega rating: {fimTimer - inicioTimer} segundos")
 
-    print(f"Tempo: {fimTimer - inicioTimer} segundos")
     inicioTimer = perf_counter()
     carregar_nomes(raizTrie,planilhaPlayer)  # Carrega os Usuarios na tabela hash e as avaliações dos jogadores
     fimTimer = perf_counter()
-    print(f"Tempo: {fimTimer - inicioTimer} segundos")
+    print(f"Tempo carrega nomes: {fimTimer - inicioTimer} segundos")
+
+    inicioTimer = perf_counter()
+    carregar_posicoes(TabelaHashJogador, TabelaHashPosicoes, planilhaPlayer)    #Carrega os ids nas devidas posições
+    fimTimer = perf_counter()
+    print(f"Tempo carrega posicoes: {fimTimer - inicioTimer} segundos")
+
     entrada = 0
     #Fica no loop até a entrada ser a opção 6
     while entrada != 5:
@@ -39,11 +48,12 @@ def main():
             idUser = int(input('Informe o id do Usuario: '))
             i = hash(idUser, 524287)
             print()
-            pesquisaUser(TabelaHashUsuario[i], TabelaHashJogador, idUser)
+            pesquisaUser(TabelaHashUsuario[i], TabelaHashJogador, idUser, planilhaRating)
             
         elif entrada == 3:
-            pass
-            #funcao3()
+            posicao = input('Informe a posição: ')
+            quantidade = int(input('Informe o número de jogadores: '))
+            pesquisaPosicao(TabelaHashPosicoes, TabelaHashJogador, posicao, quantidade)
 
         elif entrada == 4:
             pass
@@ -52,3 +62,6 @@ def main():
             print("Programa Encerrado!")
 
 main()
+
+
+
