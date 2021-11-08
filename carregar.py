@@ -162,15 +162,3 @@ def insere_tabela_posicoes(TabelaHashPosicoes, posicoes, idJogador):
             TabelaHashPosicoes[h].append(novaPosicao)
 
 
-
-
-
-
-
-
-
-
-
-
-
->>>>>>> 4780a06dc4638bf539d5823a5d70687239ab25b2

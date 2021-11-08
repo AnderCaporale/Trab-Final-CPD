@@ -31,11 +31,12 @@ def main():
     fimTimer = perf_counter()
     print(f"Tempo carrega nomes: {fimTimer - inicioTimer} segundos")
 
+
     inicioTimer = perf_counter()
     carregar_posicoes(TabelaHashJogador, TabelaHashPosicoes, planilhaPlayer)    #Carrega os ids nas devidas posições
     fimTimer = perf_counter()
     print(f"Tempo carrega posicoes: {fimTimer - inicioTimer} segundos")
-
+    
     entrada = 0
     #Fica no loop até a entrada ser a opção 6
     while entrada != 5:

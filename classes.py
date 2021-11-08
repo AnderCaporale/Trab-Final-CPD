@@ -38,5 +38,5 @@ def hash_palavras(chave, tamanho):              #Função Hash para palavras
     p = 127
     for i in range(len(chave)):
         soma += ord(chave[i]) * (p**i)
-    
     return (soma % tamanho)
+
