@@ -1,4 +1,5 @@
 from classes import *
+from classeTrie import *
 
 def carregar_players(TabelaHashJogador, TabelaHashPosicoes, planilha):
     for i in range(0, len(planilha.index)): #Le a planilha de jogadores linha a linha
@@ -11,7 +12,7 @@ def carregar_players(TabelaHashJogador, TabelaHashPosicoes, planilha):
 def insere_tabela_jogador(tabela, id, nome, positions, tamanho):
     i = hash(id, tamanho)       #Encontra a posição hash
 
-    if (tabela[i]):             #Se algum elemento já foi inserido, insere no fim
+    if tabela[i]:             #Se algum elemento já foi inserido, insere no fim
         tabela[i].append(Jogador(id, nome, positions))
     else:                       #Se não possui nenhum elemento, cria a lista e insere
         tabela[i] = []
@@ -33,7 +34,7 @@ def insere_rating(TabelaHash, id, rating, tamanho):
 
 def soma_rating(lista, id, rating):
     if lista:                               #Se a lista de jogadores não é vazia
-        for i in range(len(lista)): 
+        for i in range(len(lista)):
             if (id == lista[i].id):         #Se encontra o id
                 lista[i].soma += rating     #Faz a soma
                 lista[i].qtd += 1           #Aumenta a quantidade de avaliações
@@ -45,7 +46,7 @@ def insere_tabela_usuario(TabelaHashUsuario, idUsuario, idJogador, notaJogador, 
 
     if (TabelaHashUsuario[i]):              #Se algum elemento já foi inserido, insere no fim
         append_usuario(TabelaHashUsuario[i], idUsuario, idJogador, notaJogador)
- 
+
     else:                                   #Se não possui nenhum elemento, cria a lista encadeada e insere
         TabelaHashUsuario[i] = []
         append_usuario(TabelaHashUsuario[i], idUsuario, idJogador, notaJogador)
@@ -54,7 +55,7 @@ def insere_tabela_usuario(TabelaHashUsuario, idUsuario, idJogador, notaJogador, 
 def append_usuario(ListaHashUsuario, idUsuario, idJogador, notaJogador):
     novoUsuario = Usuario(idUsuario)        #Cria novo usuario
     adiciona_nota(novoUsuario.avaliacoes, idJogador, notaJogador)   #Adiciona a avaliação nesse usuario
-    
+
     if ListaHashUsuario:                    #Se algum elemento já foi inserido
         for i in range(len(ListaHashUsuario)):
             if ListaHashUsuario[i].id == idUsuario: #Se o usuario já está na tabela hash
@@ -62,7 +63,7 @@ def append_usuario(ListaHashUsuario, idUsuario, idJogador, notaJogador):
                 return  #Apenas adiciona a nota e retorna
 
         ListaHashUsuario.append(novoUsuario)        #Se o usuario nao está na lista, adiciona no fim
-        
+
     else:                                   #Se não possui nenhum elemento, insere no fim
         ListaHashUsuario.append(novoUsuario)
 
@@ -73,7 +74,7 @@ def adiciona_nota(AvaliacoesUsuario, jogadorId, notaJogador):
     novaAvaliacao = Avaliacao(jogadorId, notaJogador)   #Cria nova Avaliação
 
     if AvaliacoesUsuario:       #Se já possui alguma avaliação na lista
-        for i in range(len(AvaliacoesUsuario)):
+        for i in range(0, len(AvaliacoesUsuario)):
             if notaJogador > AvaliacoesUsuario[i].notaJogador:
                 AvaliacoesUsuario.insert(i, novaAvaliacao)  #Insere na posição correta
                 return
@@ -81,7 +82,7 @@ def adiciona_nota(AvaliacoesUsuario, jogadorId, notaJogador):
                 return
 
         AvaliacoesUsuario.insert(len(AvaliacoesUsuario), novaAvaliacao)
-        
+
     else:
         AvaliacoesUsuario.append(novaAvaliacao)
 
@@ -131,6 +132,12 @@ def busca_binaria(lista, item):
     return posicao
 '''
 
+def carregar_nomes(raiz:Trie,planilha):
+    """colocar os nomes em um árvore trie"""
+    for i in range(0, len(planilha.index)):#Le a planilha de rating linha a linha
+        nome = planilha['name'][i]
+        raiz.insere_nodo(nome,i)
+
 def carregar_posicoes(TabelaHashJogador, TabelaHashPosicoes, planilha):
     for i in range(0, len(planilha.index)): #Le a planilha de jogadores linha a linha
         idJogador = planilha['sofifa_id'][i]
@@ -153,16 +160,5 @@ def insere_tabela_posicoes(TabelaHashPosicoes, posicoes, idJogador):
         else:   #Se nenhuma posição foi inserida
             TabelaHashPosicoes[h] = []                  #Cria a lista e insere a nova posição
             TabelaHashPosicoes[h].append(novaPosicao)
-
-
-
-
-
-
-
-
-
-
-
 
 

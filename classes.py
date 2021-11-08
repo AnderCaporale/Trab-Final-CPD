@@ -31,12 +31,12 @@ class Posicao:
 
 
 def hash(id, tamanho):      #Função de Hash
-    return id % tamanho 
+    return id % tamanho
 
 def hash_palavras(chave, tamanho):              #Função Hash para palavras
     soma = 0
     p = 127
     for i in range(len(chave)):
         soma += ord(chave[i]) * (p**i)
-    
     return (soma % tamanho)
+

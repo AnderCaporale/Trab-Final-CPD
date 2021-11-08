@@ -1,3 +1,13 @@
+.~lock.players
+.~lock.players_21
+minirating.csv
+players.csv
+players_21.csv
+ratings.csv
+tags.csv
 *.zip
 *.csv
 __pycache__
+.idea/
+.git
+venv/

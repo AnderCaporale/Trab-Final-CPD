@@ -4,6 +4,8 @@ from menu import *
 from carregar import *
 from classes import *
 from funcao2 import *
+from classeTrie import *
+from funcao1 import *
 from funcao3 import *
 
 def main():
@@ -12,6 +14,7 @@ def main():
     TabelaHashJogador = [None] * 131071                     #Cria tabela hash para os Jogadores
     TabelaHashUsuario = [None] * 524287                     #Cria tabela hash para os Usuarios
     TabelaHashPosicoes = [None] * 7001                      #Cria tabela hash para as Posições
+    raizTrie = Trie()
 
     inicioTimer = perf_counter()
     carregar_players(TabelaHashJogador, TabelaHashPosicoes, planilhaPlayer)     #Carrega os Jogadores na tabela hash
@@ -24,6 +27,12 @@ def main():
     print(f"Tempo carrega rating: {fimTimer - inicioTimer} segundos")
 
     inicioTimer = perf_counter()
+    carregar_nomes(raizTrie,planilhaPlayer)  # Carrega os Usuarios na tabela hash e as avaliações dos jogadores
+    fimTimer = perf_counter()
+    print(f"Tempo carrega nomes: {fimTimer - inicioTimer} segundos")
+
+
+    inicioTimer = perf_counter()
     carregar_posicoes(TabelaHashJogador, TabelaHashPosicoes, planilhaPlayer)    #Carrega os ids nas devidas posições
     fimTimer = perf_counter()
     print(f"Tempo carrega posicoes: {fimTimer - inicioTimer} segundos")
@@ -34,8 +43,8 @@ def main():
         entrada = menu()
 
         if entrada == 1:
-            pass
-            #funcao1()
+            prefix = str(input('Informe o prefixo de nome para consulta: '))
+            pesquisaNomes(TabelaHashJogador,raizTrie,planilhaPlayer,prefix)
         elif entrada == 2:
             idUser = int(input('Informe o id do Usuario: '))
             i = hash(idUser, 524287)
