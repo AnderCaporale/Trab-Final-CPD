@@ -6,14 +6,6 @@ class Jogador:
         self.soma = 1           #Salva a soma de todas avaliações
         self.qtd = 1            #Salva a qtd total de avaliações
 
-'''
-#Não utilizado
-class TabelaHash:
-    def __init__(self, tamanho):
-        self.tamanho = tamanho      
-        self.hash = [None] * tamanho
-'''
-
 class Usuario:
     def __init__(self, usuarioId):  
         self.id = usuarioId         #Salva o ID do usuario
@@ -29,6 +21,10 @@ class Posicao:
         self.nome = nome                #Salva o nome da posição
         self.ids = []                   #Lista para salvar os ids dos jogadores
 
+class Tag:          
+    def __init__(self, nome):
+        self.nome = nome                #Salva o nome da tag
+        self.ids = []                   #Lista para salvar os ids dos jogadores
 
 def hash(id, tamanho):      #Função de Hash
     return id % tamanho

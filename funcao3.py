@@ -2,7 +2,7 @@ from classes import *
 
 def pesquisaPosicao(TabelaHashPosicoes, TabelaHashJogador, posicao, quantidade):
     #Imprime Cabeçalho da tabela
-    print ("{:<15} {:<40} {:<25} {:<15} {:<15}".format('Fifa ID','Name','Positions', 'Rating', 'Count'))
+    print ("{:<15} {:<50} {:<25} {:<15} {:<15}".format('Fifa ID','Name','Positions', 'Rating', 'Count'))
     h = hash_palavras(posicao, 7001)    #Faz o hash da posicao do jogador
  
     for j in range(len(TabelaHashPosicoes[h])): #Trata colisoes na tabela hash
@@ -12,8 +12,8 @@ def pesquisaPosicao(TabelaHashPosicoes, TabelaHashJogador, posicao, quantidade):
                 hashJogador = hash(TabelaHashPosicoes[h][j].ids[i], 131071)     #Faz o hash do id
                 for k in range(len(TabelaHashJogador[hashJogador])):      #Trata colisoes na tabela hash
                     if TabelaHashJogador[hashJogador][k].id == TabelaHashPosicoes[h][j].ids[i]: #Se encontrou o jogador
-                        if TabelaHashJogador[hashJogador][k].qtd >= 0:   #Se tem mais de 1000 avaliacoes
-                            print ("{:<15} {:<40} {:<25} {:<15.6} {:<15}".format(TabelaHashJogador[hashJogador][k].id, TabelaHashJogador[hashJogador][k].nome, ', '.join(TabelaHashJogador[hashJogador][k].positions), TabelaHashJogador[hashJogador][k].soma / TabelaHashJogador[hashJogador][k].qtd, TabelaHashJogador[hashJogador][k].qtd))  #Imprime a tabela
+                        if TabelaHashJogador[hashJogador][k].qtd >= 1000:   #Se tem mais de 1000 avaliacoes
+                            print ("{:<15} {:<50} {:<25} {:<15.7} {:<15}".format(TabelaHashJogador[hashJogador][k].id, TabelaHashJogador[hashJogador][k].nome, ', '.join(TabelaHashJogador[hashJogador][k].positions), TabelaHashJogador[hashJogador][k].soma / TabelaHashJogador[hashJogador][k].qtd, TabelaHashJogador[hashJogador][k].qtd))  #Imprime a tabela
 
 
 

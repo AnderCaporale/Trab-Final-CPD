@@ -66,7 +66,7 @@ def pesquisaUser(TabelaHashJogador, idUser, planilhaRating):
     print(len(listaAvaliacoes))
 
     #Imprime cabeçalho da tabela
-    print ("{:<15} {:<40} {:<15} {:<15} {:<15}".format('Fifa ID','Name','Global Rating', 'Count', 'Rating'))
+    print ("{:<15} {:<50} {:<15} {:<15} {:<15}".format('Fifa ID','Name','Global Rating', 'Count', 'Rating'))
     
     j=0
     while j < 20 and j < len(listaAvaliacoes):   #Imprime os 20 primeiros ou menos
@@ -76,7 +76,7 @@ def pesquisaUser(TabelaHashJogador, idUser, planilhaRating):
         global_rating = somaJogador / qtdJogador    #Faz a média global das avaliações
 
         #Imprime em formato de tabela
-        print("{:<15} {:<40} {:<15.6} {:<15} {:<15}".format(idJogador, nomeJogador, global_rating, qtdJogador, notaJogador))
+        print("{:<15} {:<50} {:<15.7} {:<15} {:<15}".format(idJogador, nomeJogador, global_rating, qtdJogador, notaJogador))
 
         j+=1
 

@@ -1,5 +1,6 @@
 from classes import *
 from classeTrie import *
+from math import isnan
 
 def carregar_players(TabelaHashJogador, TabelaHashPosicoes, planilha):
     for i in range(0, len(planilha.index)): #Le a planilha de jogadores linha a linha
@@ -138,11 +139,11 @@ def carregar_nomes(raiz:Trie,planilha):
         nome = planilha['name'][i]
         raiz.insere_nodo(nome,i)
 
-def carregar_posicoes(TabelaHashJogador, TabelaHashPosicoes, planilha):
+def carregar_posicoes(TabelaHashPosicoes, planilha):
     for i in range(0, len(planilha.index)): #Le a planilha de jogadores linha a linha
         idJogador = planilha['sofifa_id'][i]
         posicoes = planilha['player_positions'][i].split(', ')
-        insere_tabela_posicoes(TabelaHashPosicoes, TabelaHashJogador, posicoes, idJogador)
+        insere_tabela_posicoes(TabelaHashPosicoes, posicoes, idJogador)
 
 
 def insere_tabela_posicoes(TabelaHashPosicoes, posicoes, idJogador):
@@ -162,3 +163,26 @@ def insere_tabela_posicoes(TabelaHashPosicoes, posicoes, idJogador):
             TabelaHashPosicoes[h].append(novaPosicao)
 
 
+def carregar_tags(TabelaHashTags, planilhaTags):
+    for i in range(0, len(planilhaTags.index)): #Le a planilha de jogadores linha a linha
+        idJogador = planilhaTags['sofifa_id'][i]
+        tag = planilhaTags['tag'][i]
+        insere_tabela_tags(TabelaHashTags, tag, idJogador)
+
+
+def insere_tabela_tags(TabelaHashTags, tag, idJogador):
+    if isinstance(tag, str):
+        novaTag = Tag(tag)              #Cria uma nova tag
+        novaTag.ids.append(idJogador)
+        
+        h = hash_palavras(tag, 7001)
+
+        if(TabelaHashTags[h]):  #Se alguma posição ja foi inserida na tabela hash
+            for j in range(len(TabelaHashTags[h])):     #Procura a posição na tabela hash
+                if TabelaHashTags[h][j].nome == tag:        #Achou posição correta
+                    if idJogador not in TabelaHashTags[h][j].ids:   #Se ID Não está na lista de ids
+                        TabelaHashTags[h][j].ids.append(idJogador)  #Adiciona o ID na lista
+                    
+        else:   #Se nenhuma posição foi inserida
+            TabelaHashTags[h] = []                  #Cria a lista e insere a nova posição
+            TabelaHashTags[h].append(novaTag)
