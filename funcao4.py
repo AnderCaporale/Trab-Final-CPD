@@ -1,4 +1,5 @@
 from classes import *
+from funcao3 import ordenar
 
 def buscarTags(TabelaHashTags, TabelaHashJogador, tags):
     vetorTags = tags.split("' ")
@@ -46,42 +47,4 @@ def verifica_interseccao(matrizIDs):
                 vetorIntersec.append(idBusca)       #Salva o id igual em todas as linhas
 
     return vetorIntersec
-
-def ordenar(listaIds, TabelaHashJogador):
-    ordemCiura = [1,4,10,23,57,132,301,701,1577,3548,7983,17961,40412,90927,204585,460316,1035711]
-    shellSort(listaIds, ordemCiura, TabelaHashJogador)  #Aplica o Shell Sort na lista de ids
-
-def shellSort(vetor, ordem, TabelaHashJogador):
-    #Procura a posição no vetor dos tamanhos de segmentos
-    for j in range(0, len(ordem), 1):
-        if ordem[j] >= len(vetor):
-            posicaoOrdem = j-1
-            break
-    
-    #Chama a função de Inserção Direta passando o tamanho do incremento de segmento
-    for j in range(posicaoOrdem, -1, -1):
-        h = ordem[j]
-        insDiretaShellSort(vetor, h, TabelaHashJogador)
-
-
-def insDiretaShellSort(vetor, h, TabelaHashJogador):
-    for i in range(h, len(vetor), 1):
-        chave = vetor[i]
-        j = i - h
-
-        #Ordena conforme o rating do id do jogador
-        while(j >= 0 and acharRating(chave, TabelaHashJogador) > acharRating(vetor[j], TabelaHashJogador)):
-            vetor[j+h] = vetor[j]
-            j -= h
-        
-        vetor[j + h] = chave
-
-
-def acharRating(idJogador, TabelaHashJogador):
-    h = hash(idJogador, 131071)     #Faz o hash
-    for i in range(len(TabelaHashJogador[h])):  #Trata colisoes
-        if TabelaHashJogador[h][i].id == idJogador: #Se encontrou o id
-            rating = TabelaHashJogador[h][i].soma / TabelaHashJogador[h][i].qtd #calcula e retorna o rating
-            return rating
-
 

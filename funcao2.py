@@ -1,6 +1,6 @@
 from classes import *
 from time import perf_counter
-'''
+
 #Recebe uma lista, uma tabela hash e um id de usuario
 def pesquisaUser(ListaHashUsuario, TabelaHashJogador, idUser):
     j = 0
@@ -9,6 +9,8 @@ def pesquisaUser(ListaHashUsuario, TabelaHashJogador, idUser):
         if ListaHashUsuario[i] == idUser:
             break
     
+    ordenar(ListaHashUsuario[i].avaliacoes)    #Ordena a lista dos ids do maior rating
+
     #Imprime cabeçalho da tabela
     print ("{:<15} {:<40} {:<15} {:<15} {:<15}".format('Fifa ID','Name','Global Rating', 'Count', 'Rating'))
 
@@ -34,59 +36,35 @@ def buscaJogadores(TabelaHashJogador, h, idJogador):
         for j in range(len(TabelaHashJogador[h])):      #Trata as colisoes
             if (idJogador == TabelaHashJogador[h][j].id):   #Se encontra o id
                 return TabelaHashJogador[h][j].nome, TabelaHashJogador[h][j].soma, TabelaHashJogador[h][j].qtd
-'''
 
 
-def pesquisaUser(TabelaHashJogador, idUser, planilhaRating):
-    listaAvaliacoes = []
+def ordenar(listaIds):
+    ordemCiura = [1,4,10,23,57,132,301,701,1577,3548,7983,17961,40412,90927,204585,460316,1035711]
+    shellSort(listaIds, ordemCiura)  #Aplica o Shell Sort na lista de ids
 
-    inicioTimer = perf_counter()
-    for i in range(len(planilhaRating.index)):
-        if idUser == planilhaRating['user_id'][i]:
-            novaAvaliacao = Avaliacao(planilhaRating['sofifa_id'][i], planilhaRating['rating'][i])
-            
-            if listaAvaliacoes:       #Se já possui alguma avaliação na lista
-                continuar = True
-                j=0
-                while j < len(listaAvaliacoes) and continuar:
-                    if novaAvaliacao.notaJogador > listaAvaliacoes[j].notaJogador:
-                        listaAvaliacoes.insert(j, novaAvaliacao)  #Insere na posição correta
-                        continuar = False
-                    if j > 20:          #Se não está entre as 20 maiores, não faz nada
-                        continuar = False
-                    j+=1
-
-                if continuar:
-                    listaAvaliacoes.insert(j, novaAvaliacao)
-            else:
-                listaAvaliacoes.append(novaAvaliacao)
-
-    fimTimer = perf_counter()
-    print(f"Tempo busca: {fimTimer - inicioTimer} segundos")
-    print(len(listaAvaliacoes))
-
-    #Imprime cabeçalho da tabela
-    print ("{:<15} {:<50} {:<15} {:<15} {:<15}".format('Fifa ID','Name','Global Rating', 'Count', 'Rating'))
+def shellSort(vetor, ordem):
+    #Procura a posição no vetor dos tamanhos de segmentos
+    for j in range(0, len(ordem), 1):
+        if ordem[j] >= len(vetor):
+            posicaoOrdem = j-1
+            break
     
-    j=0
-    while j < 20 and j < len(listaAvaliacoes):   #Imprime os 20 primeiros ou menos
-        idJogador, notaJogador = buscaListaAvaliacoes(listaAvaliacoes, j)   #Pega o ID e a nota da avaliação
-        h = hash(idJogador, 131071) #Calcula a posição hash
-        nomeJogador, somaJogador, qtdJogador = buscaJogadores(TabelaHashJogador, h, idJogador)
-        global_rating = somaJogador / qtdJogador    #Faz a média global das avaliações
-
-        #Imprime em formato de tabela
-        print("{:<15} {:<50} {:<15.7} {:<15} {:<15}".format(idJogador, nomeJogador, global_rating, qtdJogador, notaJogador))
-
-        j+=1
-
-def buscaListaAvaliacoes(listaAvaliacoes, index):
-    return listaAvaliacoes[index].idJogador, listaAvaliacoes[index].notaJogador 
+    #Chama a função de Inserção Direta passando o tamanho do incremento de segmento
+    for j in range(posicaoOrdem, -1, -1):
+        h = ordem[j]
+        insDiretaShellSort(vetor, h)
 
 
-def buscaJogadores(TabelaHashJogador, h, idJogador):
-    if TabelaHashJogador[h]:
-        for j in range(len(TabelaHashJogador[h])):      #Trata as colisoes
-            if (idJogador == TabelaHashJogador[h][j].id):   #Se encontra o id
-                return TabelaHashJogador[h][j].nome, TabelaHashJogador[h][j].soma, TabelaHashJogador[h][j].qtd
+def insDiretaShellSort(vetor, h):
+    for i in range(h, len(vetor), 1):
+        chave = vetor[i]
+        j = i - h
+
+        #Ordena conforme o rating do id do jogador
+        while(j >= 0 and chave.notaJogador > vetor[j].notaJogador):
+            vetor[j+h] = vetor[j]
+            j -= h
+        
+        vetor[j + h] = chave
+
 

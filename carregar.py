@@ -1,8 +1,35 @@
 from classes import *
 from classeTrie import *
-from math import isnan
+from time import perf_counter
 
-def carregar_players(TabelaHashJogador, TabelaHashPosicoes, planilha):
+def carregamento(tabelaHashJogador, tabelaHashUsuario, tabelaHashPosicoes, tabelaHashTags, planilhaPlayer, planilhaRating, planilhaTags, raizTrie):
+    inicioTimer = perf_counter()
+    carregar_players(tabelaHashJogador, planilhaPlayer)     #Carrega os Jogadores na tabela hash
+    fimTimer = perf_counter()
+    print(f"Tempo carrega players: {fimTimer - inicioTimer} segundos")
+
+    inicioTimer = perf_counter()
+    carregar_rating(tabelaHashJogador, tabelaHashUsuario, planilhaRating)   #Carrega os Usuarios na tabela hash e as avaliações dos jogadores
+    fimTimer = perf_counter()
+    print(f"Tempo carrega rating: {fimTimer - inicioTimer} segundos")
+    
+    inicioTimer = perf_counter()
+    carregar_nomes(raizTrie,planilhaPlayer)  # Carrega os Usuarios na tabela hash e as avaliações dos jogadores
+    fimTimer = perf_counter()
+    print(f"Tempo carrega nomes: {fimTimer - inicioTimer} segundos")
+
+    inicioTimer = perf_counter()
+    carregar_posicoes(tabelaHashPosicoes, planilhaPlayer)    #Carrega os ids nas devidas posições
+    fimTimer = perf_counter()
+    print(f"Tempo carrega posicoes: {fimTimer - inicioTimer} segundos")
+
+    inicioTimer = perf_counter()
+    carregar_tags(tabelaHashTags, planilhaTags)    #Carrega as tags nas devidas posições
+    fimTimer = perf_counter()
+    print(f"Tempo carrega posicoes: {fimTimer - inicioTimer} segundos")
+
+
+def carregar_players(TabelaHashJogador, planilha):
     for i in range(0, len(planilha.index)): #Le a planilha de jogadores linha a linha
         nomeJogador = planilha['name'][i]
         idJogador = planilha['sofifa_id'][i]
@@ -25,7 +52,7 @@ def carregar_rating(TabelaHashJogador, TabelaHashUsuario, planilha):
         rating = planilha['rating'][i]          #Le a nota dada
         idJogador = planilha['sofifa_id'][i]    #Le o ID do Jogador
         insere_rating(TabelaHashJogador, idJogador, rating, 131071)
-        #insere_tabela_usuario(TabelaHashUsuario, planilha['user_id'][i], idJogador, rating, 524287)
+        insere_tabela_usuario(TabelaHashUsuario, planilha['user_id'][i], idJogador, rating, 524287)
 
 
 def insere_rating(TabelaHash, id, rating, tamanho):
@@ -69,69 +96,10 @@ def append_usuario(ListaHashUsuario, idUsuario, idJogador, notaJogador):
         ListaHashUsuario.append(novoUsuario)
 
 
-
-#Busca Linear
 def adiciona_nota(AvaliacoesUsuario, jogadorId, notaJogador):
     novaAvaliacao = Avaliacao(jogadorId, notaJogador)   #Cria nova Avaliação
+    AvaliacoesUsuario.append(novaAvaliacao)
 
-    if AvaliacoesUsuario:       #Se já possui alguma avaliação na lista
-        for i in range(0, len(AvaliacoesUsuario)):
-            if notaJogador > AvaliacoesUsuario[i].notaJogador:
-                AvaliacoesUsuario.insert(i, novaAvaliacao)  #Insere na posição correta
-                return
-            if i > 20:          #Se não está entre as 20 maiores, não faz nada
-                return
-
-        AvaliacoesUsuario.insert(len(AvaliacoesUsuario), novaAvaliacao)
-
-    else:
-        AvaliacoesUsuario.append(novaAvaliacao)
-
-'''
-#Busca binaria
-#Recebe uma lista, um id e uma nota
-def adiciona_nota(AvaliacoesUsuario, jogadorId, notaJogador):
-    novaAvaliacao = Avaliacao(jogadorId, notaJogador)       #Cria nova Avaliação
-    limite = 20     #Salva só 20 maiores avaliações
-
-    if AvaliacoesUsuario:               #Se já possui alguma avaliação na lista
-        if len(AvaliacoesUsuario) >= limite:        #Verifica se ja tem 20 avaliações
-            #Se a nota é menor ou igual que as 20 maiores, não faz nada
-            if notaJogador <= AvaliacoesUsuario[limite-1].notaJogador:     
-                return
-
-        #Se faz parte das 20 maiores, insere na posição correta
-        AvaliacoesUsuario.insert(busca_binaria(AvaliacoesUsuario, notaJogador), novaAvaliacao)
-            
-    else:           #Se não possui nenhum elemento, insere no fim
-        AvaliacoesUsuario.append(novaAvaliacao)
-
-
-#Faz a busca binaria e retorna a posição que deve ser inserido
-def busca_binaria(lista, item):
-    inicio = 0
-    ultimo = len(lista)-1
-    found = False
-    posicao = 0
-
-    while inicio <= ultimo and not found:
-        meio = (inicio + ultimo)//2
-        
-        if lista[meio].notaJogador == item:
-            found = True
-            posicao = meio
-        else:
-            if item > lista[meio].notaJogador:
-                ultimo = meio-1
-                posicao = ultimo
-            else:
-                inicio = meio+1
-                posicao = inicio
-
-    if posicao < 0:
-        return 0
-    return posicao
-'''
 
 def carregar_nomes(raiz:Trie,planilha):
     """colocar os nomes em um árvore trie"""
@@ -148,13 +116,13 @@ def carregar_posicoes(TabelaHashPosicoes, planilha):
 
 def insere_tabela_posicoes(TabelaHashPosicoes, posicoes, idJogador):
     for i in range(len(posicoes)):
-        novaPosicao = Posicao(posicoes[i])      #Cria uma nova posição
+        novaPosicao = Posicao(posicoes[i].lower())      #Cria uma nova posição
         novaPosicao.ids.append(idJogador)
 
-        h = hash_palavras(posicoes[i], 7001)
+        h = hash_palavras(posicoes[i].lower(), 7001)
         if(TabelaHashPosicoes[h]):  #Se alguma posição ja foi inserida na tabela hash
             for j in range(len(TabelaHashPosicoes[h])):     #Procura a posição na tabela hash
-                if TabelaHashPosicoes[h][j].nome == posicoes[i]:        #Achou posição correta
+                if TabelaHashPosicoes[h][j].nome == posicoes[i].lower():        #Achou posição correta
                     if idJogador not in TabelaHashPosicoes[h][j].ids:   #Se ID Não está na lista de ids
                         TabelaHashPosicoes[h][j].ids.append(idJogador)  #Adiciona o ID na lista
                     
@@ -172,14 +140,14 @@ def carregar_tags(TabelaHashTags, planilhaTags):
 
 def insere_tabela_tags(TabelaHashTags, tag, idJogador):
     if isinstance(tag, str):
-        novaTag = Tag(tag)              #Cria uma nova tag
+        novaTag = Tag(tag.lower())              #Cria uma nova tag
         novaTag.ids.append(idJogador)
         
-        h = hash_palavras(tag, 7001)
+        h = hash_palavras(tag.lower(), 7001)
 
         if(TabelaHashTags[h]):  #Se alguma posição ja foi inserida na tabela hash
             for j in range(len(TabelaHashTags[h])):     #Procura a posição na tabela hash
-                if TabelaHashTags[h][j].nome == tag:        #Achou posição correta
+                if TabelaHashTags[h][j].nome == tag.lower():        #Achou posição correta
                     if idJogador not in TabelaHashTags[h][j].ids:   #Se ID Não está na lista de ids
                         TabelaHashTags[h][j].ids.append(idJogador)  #Adiciona o ID na lista
                     

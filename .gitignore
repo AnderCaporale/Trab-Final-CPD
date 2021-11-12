@@ -11,3 +11,4 @@ __pycache__
 .idea/
 .git
 venv/
+naoUtilizado.py
