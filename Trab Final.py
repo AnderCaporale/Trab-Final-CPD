@@ -12,8 +12,9 @@ from funcao4 import *
 
 def main():
     planilhaPlayer = pd.read_csv("players_clean2.csv", delimiter = ",") #Le a planilha
-    planilhaRating = pd.read_csv("rating.csv", delimiter = ",")     #Le a planilha
-    planilhaTags = pd.read_csv("tags.csv", delimiter = ",")             #Le a planilha
+    planilhaRating = pd.read_csv("rating.csv", delimiter = ",") #Le a planilha
+    planilhaTags = pd.read_csv("tags.csv", delimiter = ",") #Le a planilha
+
     tabelaHashJogador = [None] * 131071                     #Cria tabela hash para os Jogadores
     tabelaHashUsuario = [None] * 524287                     #Cria tabela hash para os Usuarios
     tabelaHashPosicoes = [None] * 7001                      #Cria tabela hash para as Posições
