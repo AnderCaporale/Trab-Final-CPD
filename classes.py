@@ -3,8 +3,8 @@ class Jogador:
         self.id = id    #Salva ID do jogador
         self.nome = nome    #Salva nome do jogador
         self.positions = positions      #Salva posições do jogador
-        self.soma = 1           #Salva a soma de todas avaliações
-        self.qtd = 1            #Salva a qtd total de avaliações
+        self.soma = 0           #Salva a soma de todas avaliações
+        self.qtd = 0            #Salva a qtd total de avaliações
 
 class Usuario:
     def __init__(self, usuarioId):  
