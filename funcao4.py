@@ -2,31 +2,40 @@ from classes import *
 from funcao3 import ordenar
 
 def buscarTags(TabelaHashTags, TabelaHashJogador, tags):
-    vetorTags = tags.split("' ")
+
+    vetorTags = tags.split("' ")        #Coloca as tags em um vetor
     vetorIds = []
-    for i in range(len(vetorTags)):
+    for i in range(len(vetorTags)):     #Retira as aspas das tags
         vetorTags[i] = vetorTags[i].replace("'", "")
 
-    for i in range(len(vetorTags)):
-        h = hash_palavras(vetorTags[i], 7001)
+    for i in range(len(vetorTags)):     #Percorre o vetor de tags de entrada
+        h = hash_palavras(vetorTags[i], 7001)   #Faz o hash para cada tag
+        if TabelaHashTags[h]:   #Se existe algum elemento nessa posição hash
+            for j in range(len(TabelaHashTags[h])): #Percorre a lista de tags
+                if TabelaHashTags[h][j].nome == vetorTags[i]:   #Se encontrou a tag
+                    vetorIds.append(TabelaHashTags[h][j].ids)   #Adiciona na matriz de tags
+                    
+            #Se o tamanho é menor do que o i, é porque não fez o append, portanto não encontrou a tag
+            if len(vetorIds) < i:           
+                print(f"\nTag '{vetorTags[i]}' não encontradaa!")
+                return 
+        else:
+            print(f"\nTag '{vetorTags[i]}' não encontrada!")
+            return
 
-        for j in range(len(TabelaHashTags[h])):
-            if TabelaHashTags[h][j].nome == vetorTags[i]: 
-                vetorIds.append(TabelaHashTags[h][j].ids)
-
-
-    vetorIds = verifica_interseccao(vetorIds)
-    ordenar(vetorIds, TabelaHashJogador)    #Ordena a lista dos ids do maior rating
+    vetorIds = verifica_interseccao(vetorIds)       #Verifica quais IDs estão nas tags solicitadas
+    ordenar(vetorIds, TabelaHashJogador)            #Ordena a lista dos ids do maior rating
     print ("{:<15} {:<50} {:<25} {:<15} {:<15}".format('Fifa ID','Name','Positions', 'Rating', 'Count'))
 
-    for i in range(len(vetorIds)):
+    for i in range(len(vetorIds)):                  #Percorre a lista de vetores
         hashJogador = hash(vetorIds[i], 131071)     #Faz o hash do id
 
         for j in range(len(TabelaHashJogador[hashJogador])):      #Trata colisoes na tabela hash
             if TabelaHashJogador[hashJogador][j].id == vetorIds[i]: #Se encontrou o jogador
-                print ("{:<15} {:<50} {:<25} {:<15.7} {:<15}".format(TabelaHashJogador[hashJogador][j].id, TabelaHashJogador[hashJogador][j].nome, ', '.join(TabelaHashJogador[hashJogador][j].positions), TabelaHashJogador[hashJogador][j].soma / TabelaHashJogador[hashJogador][j].qtd, TabelaHashJogador[hashJogador][j].qtd))  #Imprime a tabela
-
-
+                rating = TabelaHashJogador[hashJogador][j].soma / TabelaHashJogador[hashJogador][j].qtd if TabelaHashJogador[hashJogador][j].qtd != 0 else 0.0
+                
+                print ("{:<15} {:<50} {:<25} {:<15.7} {:<15}".format(TabelaHashJogador[hashJogador][j].id, TabelaHashJogador[hashJogador][j].nome, ', '.join(TabelaHashJogador[hashJogador][j].positions), rating, TabelaHashJogador[hashJogador][j].qtd))  #Imprime a tabela
+                break
 
 def verifica_interseccao(matrizIDs):
     vetorIntersec = []      

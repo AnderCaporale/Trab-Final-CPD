@@ -12,12 +12,12 @@ from funcao4 import *
 
 def main():
     planilhaPlayer = pd.read_csv("players_clean2.csv", delimiter = ",") #Le a planilha
-    planilhaRating = pd.read_csv("minirating.csv", delimiter = ",") #Le a planilha
-    planilhaTags = pd.read_csv("tags.csv", delimiter = ",") #Le a planilha
+    planilhaRating = pd.read_csv("rating.csv", delimiter = ",")     #Le a planilha
+    planilhaTags = pd.read_csv("tags.csv", delimiter = ",")             #Le a planilha
     tabelaHashJogador = [None] * 131071                     #Cria tabela hash para os Jogadores
     tabelaHashUsuario = [None] * 524287                     #Cria tabela hash para os Usuarios
     tabelaHashPosicoes = [None] * 7001                      #Cria tabela hash para as Posições
-    tabelaHashTags = [None] * 7013                          #Cria tabela hash para as Posições
+    tabelaHashTags = [None] * 7013                          #Cria tabela hash para as Tags
     raizTrie = Trie()
 
     inicioTimerTotal = perf_counter()
@@ -36,10 +36,8 @@ def main():
 
         elif entrada == 2:
             idUser = int(input('Informe o id do Usuario: '))
-            i = hash(idUser, 524287)
-            print()
-            pesquisaUser(tabelaHashUsuario[i], tabelaHashJogador, idUser)
-            
+            pesquisaUser(tabelaHashUsuario, tabelaHashJogador, idUser)
+
         elif entrada == 3:
             posicao = input('Informe a posição: ').lower()
             quantidade = int(input('Informe o número de jogadores: '))
