@@ -1,44 +1,50 @@
+import csv
+
 from classes import *
 from classeTrie import *
 from time import perf_counter
 
-def carregamento(tabelaHashJogador, tabelaHashUsuario, tabelaHashPosicoes, tabelaHashTags, planilhaPlayer, planilhaRating, planilhaTags, raizTrie):
+def carregamento(tabelaHashJogador, tabelaHashUsuario, tabelaHashPosicoes, tabelaHashTags, raizTrie):
     inicioTimer = perf_counter()
-    carregar_players(tabelaHashJogador, planilhaPlayer,tamanho_tabelaHashJogador)     #Carrega os Jogadores na tabela hash
+    carregar_players(tabelaHashJogador)     #Carrega os Jogadores na tabela hash
     fimTimer = perf_counter()
     print(f"Tempo carrega players: {fimTimer - inicioTimer} segundos")
 
     inicioTimer = perf_counter()
-    carregar_rating(tabelaHashJogador, tabelaHashUsuario, planilhaRating,tamanho_tabelaHashJogador,tamanho_tabelaHashUsuario)   #Carrega os Usuarios na tabela hash e as avaliações dos jogadores
+    carregar_rating(tabelaHashJogador, tabelaHashUsuario)   #Carrega os Usuarios na tabela hash e as avaliações dos jogadores
     fimTimer = perf_counter()
     print(f"Tempo carrega rating: {fimTimer - inicioTimer} segundos")
     
     inicioTimer = perf_counter()
-    carregar_nomes(raizTrie,planilhaPlayer)  # Carrega os Usuarios na tabela hash e as avaliações dos jogadores
+    carregar_nomes(raizTrie)  # Carrega os Usuarios na tabela hash e as avaliações dos jogadores
     fimTimer = perf_counter()
     print(f"Tempo carrega nomes: {fimTimer - inicioTimer} segundos")
 
     inicioTimer = perf_counter()
-    carregar_posicoes(tabelaHashPosicoes, planilhaPlayer, tamanho_tabelaHashPosicoes)    #Carrega os ids nas devidas posições
+    carregar_posicoes(tabelaHashPosicoes,)    #Carrega os ids nas devidas posições
     fimTimer = perf_counter()
     print(f"Tempo carrega posicoes: {fimTimer - inicioTimer} segundos")
 
     inicioTimer = perf_counter()
-    carregar_tags(tabelaHashTags, planilhaTags, tamanho_tabelaHashTags)    #Carrega as tags nas devidas posições
+    carregar_tags(tabelaHashTags)    #Carrega as tags nas devidas posições
     fimTimer = perf_counter()
     print(f"Tempo carrega tags: {fimTimer - inicioTimer} segundos")
 
 
-def carregar_players(TabelaHashJogador, planilha, tamanho_tabelaHashJogador):
-    for i in range(0, len(planilha.index)): #Le a planilha de jogadores linha a linha
-        nomeJogador = planilha['name'][i]
-        idJogador = planilha['sofifa_id'][i]
-        posicoes = planilha['player_positions'][i].split(', ')
-        insere_tabela_jogador(TabelaHashJogador, idJogador, nomeJogador, posicoes, tamanho_tabelaHashJogador)
+def carregar_players(TabelaHashJogador):
+    file = open('players_clean2.csv', mode='r')
+    planilha = csv.reader(file)
+    next(planilha)
+    for linha in planilha: #Le a planilha de jogadores linha a linha
+        idJogador = int(linha[0])
+        nomeJogador = linha[1]
+        posicoes = linha[2].split(', ')
+        insere_tabela_jogador(TabelaHashJogador, idJogador, nomeJogador, posicoes)
+    file.close()
 
 
-def insere_tabela_jogador(tabela, id, nome, positions, tamanho):
-    i = hash(id, tamanho)       #Encontra a posição hash
+def insere_tabela_jogador(tabela, id, nome, positions):
+    i = hash(id, tamanho_tabelaHashJogador)       #Encontra a posição hash
 
     if tabela[i]:             #Se algum elemento já foi inserido, insere no fim
         tabela[i].append(Jogador(id, nome, positions))
@@ -47,17 +53,20 @@ def insere_tabela_jogador(tabela, id, nome, positions, tamanho):
         tabela[i].append(Jogador(id, nome, positions))
 
 
-def carregar_rating(TabelaHashJogador, TabelaHashUsuario, planilha, tamanho_tabelaHashJogador, tamanho_tabelaHashUsuario):
-    for i in range(0, len(planilha.index)):     #Le a planilha de rating linha a linha
-        rating = planilha['rating'][i]          #Le a nota dada
-        idJogador = planilha['sofifa_id'][i]    #Le o ID do Jogador
-        inicioTimer = perf_counter()
-        insere_rating(TabelaHashJogador, idJogador, rating, tamanho_tabelaHashJogador)
-        insere_tabela_usuario(TabelaHashUsuario, planilha['user_id'][i], idJogador, rating, tamanho_tabelaHashUsuario)
+def carregar_rating(TabelaHashJogador, TabelaHashUsuario):
+    file = open('minirating.csv', mode='r')
+    planilha = csv.reader(file)
+    next(planilha)
+    for linha in planilha:  # Le a planilha de jogadores linha a linha
+        rating = float(linha[2])    #Le a nota dada
+        idJogador = int(linha[1])   #Le o ID do Jogador
+        user = int(linha[0])        #Le o ID do user
+        insere_rating(TabelaHashJogador, idJogador, rating)
+        insere_tabela_usuario(TabelaHashUsuario, user, idJogador, rating)
+    file.close()
 
-
-def insere_rating(TabelaHash, id, rating, tamanho):
-    i = hash(id, tamanho)                       #Encontra a posição hash
+def insere_rating(TabelaHash, id, rating):
+    i = hash(id, tamanho_tabelaHashJogador) #Encontra a posição hash
     soma_rating(TabelaHash[i], id, rating)
 
 
@@ -70,8 +79,8 @@ def soma_rating(lista, id, rating):
                 return                      #Retorna depois que acha
 
 
-def insere_tabela_usuario(TabelaHashUsuario, idUsuario, idJogador, notaJogador, tamanho):
-    i = hash(idUsuario, tamanho)            #Encontra a posição hash
+def insere_tabela_usuario(TabelaHashUsuario, idUsuario, idJogador, notaJogador):
+    i = hash(idUsuario, tamanho_tabelaHashUsuario)  #Encontra a posição hash
 
     if (TabelaHashUsuario[i]):              #Se algum elemento já foi inserido, insere no fim
         append_usuario(TabelaHashUsuario[i], idUsuario, idJogador, notaJogador)
@@ -102,23 +111,30 @@ def adiciona_nota(AvaliacoesUsuario, jogadorId, notaJogador):
     AvaliacoesUsuario.append(novaAvaliacao)
 
 
-def carregar_nomes(raiz:Trie,planilha):
+def carregar_nomes(raiz:Trie):
     """colocar os nomes em um árvore trie"""
-    for i in range(0, len(planilha.index)):#Le a planilha de rating linha a linha
-        nome = planilha['name'][i]
-        id_jogador = planilha['sofifa_id'][i]
+    file = open('players_clean2.csv', mode='r')
+    planilha = csv.reader(file)
+    next(planilha)
+    for linha in planilha:  # Le a planilha de jogadores linha a linha
+        nome = linha[1]
+        id_jogador = int(linha[0])
         raiz.insere_nodo(nome,id_jogador)
+    file.close()
 
-def carregar_posicoes(TabelaHashPosicoes, planilha, tamanho_tabelaHashPosicoes):
-    for i in range(0, len(planilha.index)): #Le a planilha de jogadores linha a linha
-        idJogador = planilha['sofifa_id'][i]
-        posicoes = planilha['player_positions'][i].split(', ')
-        insere_tabela_posicoes(TabelaHashPosicoes, posicoes, idJogador, tamanho_tabelaHashPosicoes)
+def carregar_posicoes(TabelaHashPosicoes):
+    file = open('players_clean2.csv', mode='r')
+    planilha = csv.reader(file)
+    next(planilha)
+    for linha in planilha:  # Le a planilha de jogadores linha a linha
+        idJogador = int(linha[0])
+        posicoes = linha[2].split(',')
+        insere_tabela_posicoes(TabelaHashPosicoes, posicoes, idJogador)
+    file.close()
 
-
-def insere_tabela_posicoes(TabelaHashPosicoes, posicoes, idJogador, tamanho_tabelaHashPosicoes):
+def insere_tabela_posicoes(TabelaHashPosicoes, posicoes, idJogador):
     for i in range(len(posicoes)):
-        novaPosicao = Posicao(posicoes[i].lower())      #Cria uma nova posição
+        novaPosicao = Posicao(posicoes[i].lower().strip())      #Cria uma nova posição
         novaPosicao.ids.append(idJogador)
 
         h = hash_palavras(posicoes[i].lower(), tamanho_tabelaHashPosicoes)
@@ -133,14 +149,17 @@ def insere_tabela_posicoes(TabelaHashPosicoes, posicoes, idJogador, tamanho_tabe
             TabelaHashPosicoes[h].append(novaPosicao)
 
 
-def carregar_tags(TabelaHashTags, planilhaTags, tamanho_tabelaHashTags):
-    for i in range(0, len(planilhaTags.index)): #Le a planilha de jogadores linha a linha
-        idJogador = planilhaTags['sofifa_id'][i]
-        tag = planilhaTags['tag'][i]
-        insere_tabela_tags(TabelaHashTags, tag, idJogador, tamanho_tabelaHashTags)
+def carregar_tags(TabelaHashTags):
+    file = open('tags.csv', mode='r')
+    planilha = csv.reader(file)
+    next(planilha)
+    for linha in planilha:  # Le a planilha de tags linha a linha
+        idJogador = int(linha[1])
+        tag = linha[2]
+        insere_tabela_tags(TabelaHashTags, tag, idJogador)
+    file.close()
 
-
-def insere_tabela_tags(TabelaHashTags, tag, idJogador, tamanho_tabelaHashTags):
+def insere_tabela_tags(TabelaHashTags, tag, idJogador):
     if isinstance(tag, str):
         novaTag = Tag(tag.lower())              #Cria uma nova tag
         novaTag.ids.append(idJogador)

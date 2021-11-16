@@ -1,4 +1,5 @@
 import pandas as pd
+import csv
 from time import perf_counter
 from menu import *
 from carregar import *
@@ -11,11 +12,11 @@ from funcao4 import *
 
 
 def main():
-    planilhaPlayer = pd.read_csv("players_clean2.csv", delimiter = ",") #Le a planilha
-    planilhaRating = pd.read_csv("minirating.csv", delimiter = ",") #Le a planilha
-    planilhaTags = pd.read_csv("tags.csv", delimiter = ",") #Le a planilha
+    #planilhaPlayer = pd.read_csv("players_clean2.csv", delimiter = ",") #Le a planilha
+    #planilhaRating = pd.read_csv("rating.csv", delimiter = ",") #Le a planilha
+    #planilhaTags = pd.read_csv("tags.csv", delimiter = ",") #Le a planilha
 
-
+    
     tabelaHashJogador = [None] * tamanho_tabelaHashJogador                     #Cria tabela hash para os Jogadores
     tabelaHashUsuario = [None] * tamanho_tabelaHashUsuario                     #Cria tabela hash para os Usuarios
     tabelaHashPosicoes = [None] * tamanho_tabelaHashPosicoes                      #Cria tabela hash para as Posições
@@ -23,7 +24,7 @@ def main():
     raizTrie = Trie()
 
     inicioTimerTotal = perf_counter()
-    carregamento(tabelaHashJogador, tabelaHashUsuario, tabelaHashPosicoes, tabelaHashTags, planilhaPlayer, planilhaRating, planilhaTags, raizTrie)
+    carregamento(tabelaHashJogador, tabelaHashUsuario, tabelaHashPosicoes, tabelaHashTags, raizTrie)
     fimTimerTotal = perf_counter()
     print(f"TEMPO TOTAL: {fimTimerTotal - inicioTimerTotal} segundos")
     

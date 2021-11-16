@@ -1,6 +1,6 @@
 
-tamanho_tabelaHashJogador = 131071
-tamanho_tabelaHashUsuario = 52400287
+tamanho_tabelaHashJogador = 13171
+tamanho_tabelaHashUsuario = 5240287
 tamanho_tabelaHashPosicoes = 7001
 tamanho_tabelaHashTags = 7001
 
