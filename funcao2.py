@@ -3,7 +3,7 @@ from classes import *
 #Recebe uma lista, uma tabela hash e um id de usuario
 def pesquisaUser(tabelaHashUsuario, TabelaHashJogador, idUser):
     j = 0
-    hashUser = hash(idUser, 524287)
+    hashUser = hash(idUser, tamanho_tabelaHashUsuario)
     if tabelaHashUsuario[hashUser]:     #Se existe algum elemento nessa posição hash
         for i in range(len(tabelaHashUsuario[hashUser])):      #Percorre a lista de usuarios
             if tabelaHashUsuario[hashUser][i].id == idUser:            #Se encontrou o ID
@@ -14,7 +14,7 @@ def pesquisaUser(tabelaHashUsuario, TabelaHashJogador, idUser):
 
                 while j < 20 and j < len(tabelaHashUsuario[hashUser][i].avaliacoes):   #Imprime os 20 primeiros ou menos
                     idJogador, notaJogador = buscaListaAvaliacoes(tabelaHashUsuario[hashUser][i], j)   #Pega o ID e a nota da avaliação
-                    hashJogador = hash(idJogador, 131071) #Calcula a posição hash
+                    hashJogador = hash(idJogador, tamanho_tabelaHashJogador) #Calcula a posição hash
                     nomeJogador, somaJogador, qtdJogador = buscaJogadores(TabelaHashJogador, hashJogador, idJogador)
                     global_rating = somaJogador / qtdJogador    #Faz a média global das avaliações
 

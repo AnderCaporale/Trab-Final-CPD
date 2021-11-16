@@ -1,15 +1,14 @@
 from classeTrie import *
 from classes import *
 
-def pesquisaNomes(TabelaHashJogador,raizTrie:Trie,planilha,prefix):
+def pesquisaNomes(TabelaHashJogador,raizTrie:Trie,prefix):
     resultados = raizTrie.busca(prefix)
     # Imprime cabeçalho da tabela
     print("{:<15} {:<50} {:<25} {:<15} {:<15}".format('Fifa ID', 'Name', 'Positions', 'Rating', 'Count'))
     for resultado in resultados:
-        id = planilha['sofifa_id'][resultado]
-        hashJogador = hash(id, 131071)  # Faz o hash do id
+        hashJogador = hash(resultado, tamanho_tabelaHashJogador)  # Faz o hash do id
         for i in range(len(TabelaHashJogador[hashJogador])):  # Trata colisoes na tabela hash
-            if TabelaHashJogador[hashJogador][i].id == id:  # Se encontrou o jogador
+            if TabelaHashJogador[hashJogador][i].id == resultado:  # Se encontrou o jogador
                 if TabelaHashJogador[hashJogador][i].qtd == 0: # Se não houver avaliacao sobre esse jogador
                     rating = '-' #simbolo de sem rating, rating desconhecido
                 else:

@@ -9,7 +9,7 @@ def buscarTags(TabelaHashTags, TabelaHashJogador, tags):
         vetorTags[i] = vetorTags[i].replace("'", "")
 
     for i in range(len(vetorTags)):     #Percorre o vetor de tags de entrada
-        h = hash_palavras(vetorTags[i], 7001)   #Faz o hash para cada tag
+        h = hash_palavras(vetorTags[i], tamanho_tabelaHashTags)   #Faz o hash para cada tag
         if TabelaHashTags[h]:   #Se existe algum elemento nessa posição hash
             for j in range(len(TabelaHashTags[h])): #Percorre a lista de tags
                 if TabelaHashTags[h][j].nome == vetorTags[i]:   #Se encontrou a tag
@@ -28,7 +28,7 @@ def buscarTags(TabelaHashTags, TabelaHashJogador, tags):
     print ("{:<15} {:<50} {:<25} {:<15} {:<15}".format('Fifa ID','Name','Positions', 'Rating', 'Count'))
 
     for i in range(len(vetorIds)):                  #Percorre a lista de vetores
-        hashJogador = hash(vetorIds[i], 131071)     #Faz o hash do id
+        hashJogador = hash(vetorIds[i], tamanho_tabelaHashJogador)     #Faz o hash do id
 
         for j in range(len(TabelaHashJogador[hashJogador])):      #Trata colisoes na tabela hash
             if TabelaHashJogador[hashJogador][j].id == vetorIds[i]: #Se encontrou o jogador

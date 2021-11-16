@@ -12,13 +12,14 @@ from funcao4 import *
 
 def main():
     planilhaPlayer = pd.read_csv("players_clean2.csv", delimiter = ",") #Le a planilha
-    planilhaRating = pd.read_csv("rating.csv", delimiter = ",") #Le a planilha
+    planilhaRating = pd.read_csv("minirating.csv", delimiter = ",") #Le a planilha
     planilhaTags = pd.read_csv("tags.csv", delimiter = ",") #Le a planilha
 
-    tabelaHashJogador = [None] * 131071                     #Cria tabela hash para os Jogadores
-    tabelaHashUsuario = [None] * 524287                     #Cria tabela hash para os Usuarios
-    tabelaHashPosicoes = [None] * 7001                      #Cria tabela hash para as Posições
-    tabelaHashTags = [None] * 7013                          #Cria tabela hash para as Tags
+
+    tabelaHashJogador = [None] * tamanho_tabelaHashJogador                     #Cria tabela hash para os Jogadores
+    tabelaHashUsuario = [None] * tamanho_tabelaHashUsuario                     #Cria tabela hash para os Usuarios
+    tabelaHashPosicoes = [None] * tamanho_tabelaHashPosicoes                      #Cria tabela hash para as Posições
+    tabelaHashTags = [None] * tamanho_tabelaHashTags                          #Cria tabela hash para as Tags
     raizTrie = Trie()
 
     inicioTimerTotal = perf_counter()
@@ -33,7 +34,7 @@ def main():
 
         if entrada == 1:
             prefix = str(input('Informe o prefixo de nome para consulta: '))
-            pesquisaNomes(tabelaHashJogador,raizTrie,planilhaPlayer,prefix)
+            pesquisaNomes(tabelaHashJogador,raizTrie,prefix)
 
         elif entrada == 2:
             idUser = int(input('Informe o id do Usuario: '))

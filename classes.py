@@ -1,3 +1,9 @@
+
+tamanho_tabelaHashJogador = 131071
+tamanho_tabelaHashUsuario = 52400287
+tamanho_tabelaHashPosicoes = 7001
+tamanho_tabelaHashTags = 7001
+
 class Jogador:
     def __init__(self, id, nome, positions):
         self.id = id    #Salva ID do jogador

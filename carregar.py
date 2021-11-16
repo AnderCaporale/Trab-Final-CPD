@@ -4,12 +4,12 @@ from time import perf_counter
 
 def carregamento(tabelaHashJogador, tabelaHashUsuario, tabelaHashPosicoes, tabelaHashTags, planilhaPlayer, planilhaRating, planilhaTags, raizTrie):
     inicioTimer = perf_counter()
-    carregar_players(tabelaHashJogador, planilhaPlayer)     #Carrega os Jogadores na tabela hash
+    carregar_players(tabelaHashJogador, planilhaPlayer,tamanho_tabelaHashJogador)     #Carrega os Jogadores na tabela hash
     fimTimer = perf_counter()
     print(f"Tempo carrega players: {fimTimer - inicioTimer} segundos")
 
     inicioTimer = perf_counter()
-    carregar_rating(tabelaHashJogador, tabelaHashUsuario, planilhaRating)   #Carrega os Usuarios na tabela hash e as avaliações dos jogadores
+    carregar_rating(tabelaHashJogador, tabelaHashUsuario, planilhaRating,tamanho_tabelaHashJogador,tamanho_tabelaHashUsuario)   #Carrega os Usuarios na tabela hash e as avaliações dos jogadores
     fimTimer = perf_counter()
     print(f"Tempo carrega rating: {fimTimer - inicioTimer} segundos")
     
@@ -19,22 +19,22 @@ def carregamento(tabelaHashJogador, tabelaHashUsuario, tabelaHashPosicoes, tabel
     print(f"Tempo carrega nomes: {fimTimer - inicioTimer} segundos")
 
     inicioTimer = perf_counter()
-    carregar_posicoes(tabelaHashPosicoes, planilhaPlayer)    #Carrega os ids nas devidas posições
+    carregar_posicoes(tabelaHashPosicoes, planilhaPlayer, tamanho_tabelaHashPosicoes)    #Carrega os ids nas devidas posições
     fimTimer = perf_counter()
     print(f"Tempo carrega posicoes: {fimTimer - inicioTimer} segundos")
 
     inicioTimer = perf_counter()
-    carregar_tags(tabelaHashTags, planilhaTags)    #Carrega as tags nas devidas posições
+    carregar_tags(tabelaHashTags, planilhaTags, tamanho_tabelaHashTags)    #Carrega as tags nas devidas posições
     fimTimer = perf_counter()
-    print(f"Tempo carrega posicoes: {fimTimer - inicioTimer} segundos")
+    print(f"Tempo carrega tags: {fimTimer - inicioTimer} segundos")
 
 
-def carregar_players(TabelaHashJogador, planilha):
+def carregar_players(TabelaHashJogador, planilha, tamanho_tabelaHashJogador):
     for i in range(0, len(planilha.index)): #Le a planilha de jogadores linha a linha
         nomeJogador = planilha['name'][i]
         idJogador = planilha['sofifa_id'][i]
         posicoes = planilha['player_positions'][i].split(', ')
-        insere_tabela_jogador(TabelaHashJogador, idJogador, nomeJogador, posicoes, 131071)
+        insere_tabela_jogador(TabelaHashJogador, idJogador, nomeJogador, posicoes, tamanho_tabelaHashJogador)
 
 
 def insere_tabela_jogador(tabela, id, nome, positions, tamanho):
@@ -47,12 +47,13 @@ def insere_tabela_jogador(tabela, id, nome, positions, tamanho):
         tabela[i].append(Jogador(id, nome, positions))
 
 
-def carregar_rating(TabelaHashJogador, TabelaHashUsuario, planilha):
+def carregar_rating(TabelaHashJogador, TabelaHashUsuario, planilha, tamanho_tabelaHashJogador, tamanho_tabelaHashUsuario):
     for i in range(0, len(planilha.index)):     #Le a planilha de rating linha a linha
         rating = planilha['rating'][i]          #Le a nota dada
         idJogador = planilha['sofifa_id'][i]    #Le o ID do Jogador
-        insere_rating(TabelaHashJogador, idJogador, rating, 131071)
-        insere_tabela_usuario(TabelaHashUsuario, planilha['user_id'][i], idJogador, rating, 524287)
+        inicioTimer = perf_counter()
+        insere_rating(TabelaHashJogador, idJogador, rating, tamanho_tabelaHashJogador)
+        insere_tabela_usuario(TabelaHashUsuario, planilha['user_id'][i], idJogador, rating, tamanho_tabelaHashUsuario)
 
 
 def insere_rating(TabelaHash, id, rating, tamanho):
@@ -105,21 +106,22 @@ def carregar_nomes(raiz:Trie,planilha):
     """colocar os nomes em um árvore trie"""
     for i in range(0, len(planilha.index)):#Le a planilha de rating linha a linha
         nome = planilha['name'][i]
-        raiz.insere_nodo(nome,i)
+        id_jogador = planilha['sofifa_id'][i]
+        raiz.insere_nodo(nome,id_jogador)
 
-def carregar_posicoes(TabelaHashPosicoes, planilha):
+def carregar_posicoes(TabelaHashPosicoes, planilha, tamanho_tabelaHashPosicoes):
     for i in range(0, len(planilha.index)): #Le a planilha de jogadores linha a linha
         idJogador = planilha['sofifa_id'][i]
         posicoes = planilha['player_positions'][i].split(', ')
-        insere_tabela_posicoes(TabelaHashPosicoes, posicoes, idJogador)
+        insere_tabela_posicoes(TabelaHashPosicoes, posicoes, idJogador, tamanho_tabelaHashPosicoes)
 
 
-def insere_tabela_posicoes(TabelaHashPosicoes, posicoes, idJogador):
+def insere_tabela_posicoes(TabelaHashPosicoes, posicoes, idJogador, tamanho_tabelaHashPosicoes):
     for i in range(len(posicoes)):
         novaPosicao = Posicao(posicoes[i].lower())      #Cria uma nova posição
         novaPosicao.ids.append(idJogador)
 
-        h = hash_palavras(posicoes[i].lower(), 7001)
+        h = hash_palavras(posicoes[i].lower(), tamanho_tabelaHashPosicoes)
         if(TabelaHashPosicoes[h]):  #Se alguma posição ja foi inserida na tabela hash
             for j in range(len(TabelaHashPosicoes[h])):     #Procura a posição na tabela hash
                 if TabelaHashPosicoes[h][j].nome == posicoes[i].lower():        #Achou posição correta
@@ -131,19 +133,19 @@ def insere_tabela_posicoes(TabelaHashPosicoes, posicoes, idJogador):
             TabelaHashPosicoes[h].append(novaPosicao)
 
 
-def carregar_tags(TabelaHashTags, planilhaTags):
+def carregar_tags(TabelaHashTags, planilhaTags, tamanho_tabelaHashTags):
     for i in range(0, len(planilhaTags.index)): #Le a planilha de jogadores linha a linha
         idJogador = planilhaTags['sofifa_id'][i]
         tag = planilhaTags['tag'][i]
-        insere_tabela_tags(TabelaHashTags, tag, idJogador)
+        insere_tabela_tags(TabelaHashTags, tag, idJogador, tamanho_tabelaHashTags)
 
 
-def insere_tabela_tags(TabelaHashTags, tag, idJogador):
+def insere_tabela_tags(TabelaHashTags, tag, idJogador, tamanho_tabelaHashTags):
     if isinstance(tag, str):
         novaTag = Tag(tag.lower())              #Cria uma nova tag
         novaTag.ids.append(idJogador)
         
-        h = hash_palavras(tag.lower(), 7001)
+        h = hash_palavras(tag.lower(), tamanho_tabelaHashTags)
 
         if(TabelaHashTags[h]):  #Se alguma posição ja foi inserida na tabela hash
             for j in range(len(TabelaHashTags[h])):     #Procura a posição na tabela hash

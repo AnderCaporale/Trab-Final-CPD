@@ -12,7 +12,7 @@ def pesquisaPosicao(TabelaHashPosicoes, TabelaHashJogador, posicao, quantidade):
                 ordenar(TabelaHashPosicoes[h][j].ids, TabelaHashJogador)    #Ordena a lista dos ids do maior rating para o menor
                 for i in range(quantidade):     #Repete conforme as vezes solicitadas
                     if i < len(TabelaHashPosicoes[h][j].ids):   #Verifica se foi solicitado um ranking maior que a qtd de jogadores
-                        hashJogador = hash(TabelaHashPosicoes[h][j].ids[i], 131071)     #Faz o hash do id
+                        hashJogador = hash(TabelaHashPosicoes[h][j].ids[i], tamanho_tabelaHashJogador)     #Faz o hash do id
                         for k in range(len(TabelaHashJogador[hashJogador])):      #Trata colisoes na tabela hash
                             if TabelaHashJogador[hashJogador][k].id == TabelaHashPosicoes[h][j].ids[i]: #Se encontrou o jogador
                                 if TabelaHashJogador[hashJogador][k].qtd >= 1000:   #Se tem mais de 1000 avaliacoes
@@ -60,7 +60,7 @@ def insDiretaShellSort(vetor, h, TabelaHashJogador):
 
 
 def acharRating(idJogador, TabelaHashJogador):
-    h = hash(idJogador, 131071)     #Faz o hash
+    h = hash(idJogador, tamanho_tabelaHashJogador)     #Faz o hash
     for i in range(len(TabelaHashJogador[h])):  #Trata colisoes
         if TabelaHashJogador[h][i].id == idJogador: #Se encontrou o id
             rating = TabelaHashJogador[h][i].soma / TabelaHashJogador[h][i].qtd if TabelaHashJogador[h][i].qtd != 0 else 0.0
