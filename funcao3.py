@@ -15,7 +15,7 @@ def pesquisaPosicao(TabelaHashPosicoes, TabelaHashJogador, posicao, quantidade):
                         hashJogador = hash(TabelaHashPosicoes[h][j].ids[i], tamanho_tabelaHashJogador)     #Faz o hash do id
                         for k in range(len(TabelaHashJogador[hashJogador])):      #Trata colisoes na tabela hash
                             if TabelaHashJogador[hashJogador][k].id == TabelaHashPosicoes[h][j].ids[i]: #Se encontrou o jogador
-                                if TabelaHashJogador[hashJogador][k].qtd >= 1:   #Se tem mais de 1000 avaliacoes
+                                if TabelaHashJogador[hashJogador][k].qtd >= 1000:   #Se tem mais de 1000 avaliacoes
                                     rating = TabelaHashJogador[hashJogador][k].soma / TabelaHashJogador[hashJogador][k].qtd if TabelaHashJogador[hashJogador][k].qtd != 0 else 0.0
 
                                     print ("{:<15} {:<50} {:<25} {:<15.7} {:<15}".format(TabelaHashJogador[hashJogador][k].id, TabelaHashJogador[hashJogador][k].nome, ', '.join(TabelaHashJogador[hashJogador][k].positions), rating, TabelaHashJogador[hashJogador][k].qtd))  #Imprime a tabela

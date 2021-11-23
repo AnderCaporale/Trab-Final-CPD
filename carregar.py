@@ -1,38 +1,37 @@
 import csv
-
 from classes import *
 from classeTrie import *
 from time import perf_counter
 
-def carregamento(tabelaHashJogador, tabelaHashUsuario, tabelaHashPosicoes, tabelaHashTags, raizTrie):
+def carregamento(tabelaHashJogador, tabelaHashUsuario, tabelaHashPosicoes, tabelaHashTags, raizTrie, vetorTempos):
     inicioTimer = perf_counter()
     carregar_players(tabelaHashJogador)     #Carrega os Jogadores na tabela hash
     fimTimer = perf_counter()
-    print(f"Tempo carrega players: {fimTimer - inicioTimer} segundos")
+    vetorTempos[0] = fimTimer - inicioTimer     #Salva o tempo gasto
 
     inicioTimer = perf_counter()
     carregar_rating(tabelaHashJogador, tabelaHashUsuario)   #Carrega os Usuarios na tabela hash e as avaliações dos jogadores
     fimTimer = perf_counter()
-    print(f"Tempo carrega rating: {fimTimer - inicioTimer} segundos")
-    
+    vetorTempos[1] = fimTimer - inicioTimer
+
     inicioTimer = perf_counter()
     carregar_nomes(raizTrie)  # Carrega os Usuarios na tabela hash e as avaliações dos jogadores
     fimTimer = perf_counter()
-    print(f"Tempo carrega nomes: {fimTimer - inicioTimer} segundos")
+    vetorTempos[2] = fimTimer - inicioTimer
 
     inicioTimer = perf_counter()
-    carregar_posicoes(tabelaHashPosicoes,)    #Carrega os ids nas devidas posições
+    carregar_posicoes(tabelaHashPosicoes)    #Carrega os ids nas devidas posições
     fimTimer = perf_counter()
-    print(f"Tempo carrega posicoes: {fimTimer - inicioTimer} segundos")
+    vetorTempos[3] = fimTimer - inicioTimer
 
     inicioTimer = perf_counter()
     carregar_tags(tabelaHashTags)    #Carrega as tags nas devidas posições
     fimTimer = perf_counter()
-    print(f"Tempo carrega tags: {fimTimer - inicioTimer} segundos")
+    vetorTempos[4] = fimTimer - inicioTimer
 
 
 def carregar_players(TabelaHashJogador):
-    file = open('players_clean2.csv', mode='r')
+    file = open('players.csv', mode='r')
     planilha = csv.reader(file)
     next(planilha)
     for linha in planilha: #Le a planilha de jogadores linha a linha
@@ -54,7 +53,7 @@ def insere_tabela_jogador(tabela, id, nome, positions):
 
 
 def carregar_rating(TabelaHashJogador, TabelaHashUsuario):
-    file = open('minirating.csv', mode='r')
+    file = open('rating.csv', mode='r')
     planilha = csv.reader(file)
     next(planilha)
     for linha in planilha:  # Le a planilha de jogadores linha a linha

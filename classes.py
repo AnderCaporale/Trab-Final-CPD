@@ -1,8 +1,8 @@
 
-tamanho_tabelaHashJogador = 13171
+tamanho_tabelaHashJogador = 24709
 tamanho_tabelaHashUsuario = 5240287
-tamanho_tabelaHashPosicoes = 7001
-tamanho_tabelaHashTags = 7001
+tamanho_tabelaHashPosicoes = 23
+tamanho_tabelaHashTags = 1223
 
 class Jogador:
     def __init__(self, id, nome, positions):

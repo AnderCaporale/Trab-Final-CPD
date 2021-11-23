@@ -4,7 +4,7 @@ from classes import *
 def pesquisaNomes(TabelaHashJogador,raizTrie:Trie,prefix):
     resultados = raizTrie.busca(prefix)
     # Imprime cabeçalho da tabela
-    print("{:<15} {:<50} {:<25} {:<15} {:<15}".format('Fifa ID', 'Name', 'Positions', 'Rating', 'Count'))
+    print("\n{:<15} {:<50} {:<25} {:<15} {:<15}".format('Fifa ID', 'Name', 'Positions', 'Rating', 'Count'))
     for resultado in resultados:
         hashJogador = hash(resultado, tamanho_tabelaHashJogador)  # Faz o hash do id
         for i in range(len(TabelaHashJogador[hashJogador])):  # Trata colisoes na tabela hash
