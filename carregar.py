@@ -112,7 +112,7 @@ def adiciona_nota(AvaliacoesUsuario, jogadorId, notaJogador):
 
 def carregar_nomes(raiz:Trie):
     """colocar os nomes em um árvore trie"""
-    file = open('players_clean2.csv', mode='r')
+    file = open('players.csv', mode='r')
     planilha = csv.reader(file)
     next(planilha)
     for linha in planilha:  # Le a planilha de jogadores linha a linha
@@ -122,12 +122,12 @@ def carregar_nomes(raiz:Trie):
     file.close()
 
 def carregar_posicoes(TabelaHashPosicoes):
-    file = open('players_clean2.csv', mode='r')
+    file = open('players.csv', mode='r')
     planilha = csv.reader(file)
     next(planilha)
     for linha in planilha:  # Le a planilha de jogadores linha a linha
         idJogador = int(linha[0])
-        posicoes = linha[2].split(',')
+        posicoes = linha[2].split(', ')
         insere_tabela_posicoes(TabelaHashPosicoes, posicoes, idJogador)
     file.close()
 

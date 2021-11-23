@@ -36,7 +36,7 @@ def main():
             print("Utilize as consultas player, user, top** ou tags: ")
             pesquisa = input().lower().split(' ', 1)    #Transforma tudo em minusculo e divide no primeiro espaço
             if pesquisa[0] == 'player':         #Se a primeira palavra for player
-                prefix = str(pesquisa[1])       #Salva o prefixo do nome
+                prefix = str(pesquisa[1]).lower()#Salva o prefixo do nome
                 pesquisaNomes(tabelaHashJogador,raizTrie,prefix)
 
             elif pesquisa[0] == 'user':         #Se a primeira palavra for user

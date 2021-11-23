@@ -18,6 +18,7 @@ class Trie:
 
     def insere_nodo(self,nome,val):
         """talvez fazer não ser recursiva depois pra ser mais rapido"""
+        nome = nome.lower()
         self.raiz = self.__insere_nodo(self.raiz, nome, val, 0)
 
     def __insere_nodo(self, nodo:NodoTrie, nome:str, val, d):
